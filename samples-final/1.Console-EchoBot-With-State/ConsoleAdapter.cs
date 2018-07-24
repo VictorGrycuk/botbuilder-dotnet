@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
@@ -21,7 +22,7 @@ namespace Microsoft.Bot.Samples.Echo
             return this;
         }
 
-        public async Task ProcessActivity(Func<ITurnContext, Task> callback = null)
+        public async Task ProcessActivity(Func<ITurnContext, Task> callback = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             while (true)
             {
@@ -43,12 +44,12 @@ namespace Microsoft.Bot.Samples.Echo
 
                 using (var context = new TurnContext(this, activity))
                 {
-                    await base.RunPipeline(context, callback);
+                    await base.RunPipelineAsync(context, callback, cancellationToken);
                 }
             }
         }
 
-        public override async Task<ResourceResponse[]> SendActivities(ITurnContext context, Activity[] activities)
+        public override async Task<ResourceResponse[]> SendActivitiesAsync(ITurnContext context, Activity[] activities, CancellationToken CancelationToken)
         {
             if (context == null)
             {
@@ -110,12 +111,12 @@ namespace Microsoft.Bot.Samples.Echo
             return responses;
         }
 
-        public override Task<ResourceResponse> UpdateActivity(ITurnContext context, Activity activity)
+        public override async Task<ResourceResponse> UpdateActivityAsync(ITurnContext context, Activity activity, CancellationToken CancelationToken)
         {
             throw new NotImplementedException();
         }
 
-        public override Task DeleteActivity(ITurnContext context, ConversationReference reference)
+        public override async Task DeleteActivityAsync(ITurnContext context, ConversationReference reference, CancellationToken CancelationToken)
         {
             throw new NotImplementedException();
         }

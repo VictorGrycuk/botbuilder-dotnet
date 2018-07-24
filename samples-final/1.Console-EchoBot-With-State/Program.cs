@@ -3,10 +3,8 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Bot;
 using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Adapters;
-using Microsoft.Bot.Builder.Core.Extensions;
+using Microsoft.Bot.Samples.Echo;
 using Microsoft.Bot.Schema;
 
 namespace Console_EchoBot_With_State
@@ -16,23 +14,29 @@ namespace Console_EchoBot_With_State
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the EchoBot. Type something to get started.");
-
+            var convStateManager = new ConversationState(new MemoryStorage());
             // Create the Console Adapter, and add Conversation State 
             // to the Bot. The Conversation State will be stored in memory. 
             var adapter = new ConsoleAdapter()
-                .Use(new ConversationState<EchoState>(new MemoryStorage()));
+                .Use(convStateManager);
 
             // Create the instance of our Bot.
-            var echoBot = new EchoBot();
+            var echoBot = new EchoBot(convStateManager.CreateProperty<EchoState>("ConversationState"));
 
             // Connect the Console Adapter to the Bot. 
             adapter.ProcessActivity(
-                async (context) => await echoBot.OnTurn(context)).Wait();
+                async (context) => await echoBot.OnTurnAsync(context)).Wait();
         }
     }
 
     public class EchoBot : IBot
     {
+        private readonly IStatePropertyAccessor<EchoState> _accessor;
+
+        public EchoBot(IStatePropertyAccessor<EchoState> accessor)
+        {
+            _accessor = accessor;
+        }
         /// <summary>
         /// Every Conversation turn for our EchoBot will call this method. In here
         /// the bot checks the Activty type to verify it's a message, bumps the 
@@ -41,19 +45,20 @@ namespace Console_EchoBot_With_State
         /// </summary>
         /// <param name="context">Turn scoped context containing all the data needed
         /// for processing this conversation turn. </param>        
-        public async Task OnTurn(ITurnContext context)
+        public async Task OnTurnAsync(ITurnContext context)
         {
             // This bot is only handling Messages
             if (context.Activity.Type == ActivityTypes.Message)
             {
                 // Get the conversation state from the turn context
-                var state = context.GetConversationState<EchoState>();
-
+                // TODO: 
+                //var state = context.GetConversationState<EchoState>();
+                var state = await _accessor.GetAsync(context);
                 // Bump the turn count. 
                 state.TurnCount++;
 
                 // Echo back to the user whatever they typed.
-                await context.SendActivity($"Turn {state.TurnCount}: You sent '{context.Activity.Text}'");
+                await context.SendActivityAsync($"Turn {state.TurnCount}: You sent '{context.Activity.Text}'");
             }
         }
     }
