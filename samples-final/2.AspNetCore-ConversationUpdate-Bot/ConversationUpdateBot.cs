@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot;
 using Microsoft.Bot.Builder;
@@ -11,7 +12,7 @@ namespace AspNetCore_ConversationUpdate_Bot
 {
     public class ConversationUpdateBot : IBot
     {
-        public Task OnTurn(ITurnContext context)
+        public async Task OnTurnAsync(ITurnContext context)
         {
             switch (context.Activity.Type)
             {
@@ -20,15 +21,16 @@ namespace AspNetCore_ConversationUpdate_Bot
                     var newUserName = context.Activity.MembersAdded.FirstOrDefault()?.Name;
                     if (!string.IsNullOrWhiteSpace(newUserName) && newUserName != "Bot")
                     {
-                        return context.SendActivity($"Hello {newUserName}!");
+                        await context.SendActivityAsync($"Hello {newUserName}!");
                     }
 
                     break;
                 case ActivityTypes.Message:
-                    return context.SendActivity("Welcome to the conversationUpdate-bot! " +
+                    await context.SendActivityAsync("Welcome to the conversationUpdate-bot! " +
                         "On a _\"conversationUpdate\"_-type activity, this bot will greet new users.");
+                    break;
             }
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
     }
 }
