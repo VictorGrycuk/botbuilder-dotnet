@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot;
 using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Core.Extensions;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 
@@ -13,9 +12,16 @@ namespace AspNetCore_Single_Prompts
 {
     public class SinglePromptBot : IBot
     {
-        public async Task OnTurn(ITurnContext context)
+        private readonly IStatePropertyAccessor<Dictionary<string, object>> accessor;
+
+        public SinglePromptBot(IStatePropertyAccessor<Dictionary<string, object>> accessor)
         {
-            var state = ConversationState<Dictionary<string, object>>.Get(context);
+            this.accessor = accessor;
+        }
+
+        public async Task OnTurnAsync(ITurnContext context)
+        {
+            var state = await context.GetConversationState<Dictionary<string,object>>(this.accessor);// ConversationState<Dictionary<string, object>>.Get(context);
             var prompt = new TextPrompt();
             var options = new PromptOptions { PromptString = "Hello, I'm the demo bot. What is your name?" };
 
@@ -35,11 +41,22 @@ namespace AspNetCore_Single_Prompts
                     }
                     else if (dialogCompletion.IsCompleted)
                     {
-                        var textResult = (Microsoft.Bot.Builder.Prompts.TextResult)dialogCompletion.Result;
-                        await context.SendActivity($"'{textResult.Value}' is a great name!");
+                        var textResult = (TextResult)dialogCompletion.Result;
+                        await context.SendActivityAsync($"'{textResult.Value}' is a great name!");
                     }
                     break;
             }
         }
-    }    
+    }
+
+    /// <summary>
+    /// Extension class for obtaining the ConversationState using the IStatePropertyAccessor.
+    /// </summary>
+    public static class ITurnContextExtensions
+    {
+        public static Task<T> GetConversationState<T>(this ITurnContext turnContext, IStatePropertyAccessor<T> accessor)
+        {
+            return accessor.GetAsync(turnContext);
+        }
+    }
 }
