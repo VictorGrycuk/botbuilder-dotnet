@@ -1,4 +1,6 @@
-﻿using Microsoft.Build.Framework;
+﻿using System;
+using Microsoft.Bot.PublishValidation.BotHelper;
+using Microsoft.Build.Framework;
 using TaskBuilder.Helpers;
 
 namespace Microsoft.Bot.PublishValidation
@@ -7,24 +9,35 @@ namespace Microsoft.Bot.PublishValidation
     {
         public string ProjectPath { get; set; }
 
+        public string ForbidSpacesInProjectName { get; set; }
+        public string RequireBotFile { get; set; }
+        public string RequireEndpoints { get; set; }
+        public string ForbidEndpoints { get; set; }
+        public string RequireLuisKey { get; set; }
+        public string RequireQnAMakerKey { get; set; }
+
         public override bool Execute()
         {
             LoggerHelper logHelper = new LoggerHelper(Log.LogError, Log.LogWarning);
+            ConfigurationOptions configurationOptions =
+                new ConfigurationOptions(ForbidSpacesInProjectName, RequireBotFile, RequireEndpoints,
+                ForbidEndpoints, RequireLuisKey, RequireQnAMakerKey);
 
-            string resultMsg = string.Empty;
-            int logType = 0;
-
-            // Validate if the Project directory path is valid
-            if (!DirectoryValidatorHelper.DirectoryIsValid(ProjectPath, out resultMsg, out logType))
+            string errorMsg = string.Empty;
+            try
             {
-                logHelper.Log(resultMsg, logType);
-                return false;
+                Log.LogMessage(MessageImportance.High, string.Format("Project Path ===> {0}", ProjectPath));
+                Log.LogMessage(MessageImportance.High, "Starting to read Bot's file...");
+
+                if (!BotValidatorHelper.BotFileIsValid(ProjectPath, configurationOptions, out errorMsg))
+                {
+                    Log.LogMessage(MessageImportance.High, string.Format("Process found this error ===> {0}", errorMsg));
+                }
             }
-
-            // Validate if there is any .bot file inside the Project Directory 
-            if (!DirectoryValidatorHelper.FileExists(ProjectPath, "*.bot", out resultMsg, out logType))
+            catch (Exception ex)
             {
-                logHelper.Log(resultMsg, logType);
+                Log.LogWarning("Error handled");
+                Log.LogErrorFromException(ex);
                 return false;
             }
 

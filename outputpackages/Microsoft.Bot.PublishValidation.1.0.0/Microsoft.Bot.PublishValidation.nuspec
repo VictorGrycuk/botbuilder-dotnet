@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.Bot.PublishValidation</id>
+    <version>1.0.0</version>
+    <authors>microsoft,BotFramework,nugetbotbuilder</authors>
+    <owners>microsoft,BotFramework,nugetbotbuilder</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/Microsoft/BotBuilder/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Microsoft/botbuilder-dotnet</projectUrl>
+    <iconUrl>http://docs.botframework.com/images/bot_icon.png</iconUrl>
+    <description>Task for validating the configuration of bot projects before publishing</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <repository url="https://github.com/Microsoft/botbuilder-dotnet" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Microsoft.Build.Framework" version="15.9.20" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Build.Utilities.Core" version="15.9.20" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="10.0.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
