@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.Bot.PublishValidation;
 using Microsoft.Bot.PublishValidation.BotHelper;
 
@@ -36,7 +38,7 @@ namespace TaskBuilder.Helpers
                 // Also validates its existence (throws an exception is there isn't any file)
                 BotConfiguration botConfiguration = BotValidatorHelper.LoadFromFolder(folder);
 
-                return BotValidatorHelper.ValidateBotFile(botConfiguration, configurationOptions, out errorMsg);
+                return BotValidatorHelper.ValidateBotFile(botConfiguration, configurationOptions, folder, out errorMsg);
             }
             catch (Exception ex)
             {
@@ -50,12 +52,19 @@ namespace TaskBuilder.Helpers
         /// <param name="botConfiguration"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        private static bool ValidateBotFile(BotConfiguration botConfiguration, ConfigurationOptions options, out string errorMsg)
+        private static bool ValidateBotFile(BotConfiguration botConfiguration, ConfigurationOptions options, string folder, out string errorMsg)
         {
             try
             {
-                bool result = false;
                 errorMsg = string.Empty;
+
+                if (options.ForbidSpacesInProjectName)
+                {
+                    if (!BotValidatorHelper.ProjectNameIsValid(folder, out errorMsg))
+                    {
+                        return false;
+                    }
+                }
 
                 // Check if the .bot file contains the specified endpoints
                 if (!string.IsNullOrWhiteSpace(options.RequireEndpoints))
@@ -196,6 +205,33 @@ namespace TaskBuilder.Helpers
             {
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// Check if the Project's Name contains white spaces. If there is any white space, will return an error.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="errorMsg"></param>
+        /// <returns></returns>
+        private static bool ProjectNameIsValid(string folder, out string errorMsg)
+        {
+            if (string.IsNullOrEmpty(folder))
+            {
+                throw new ArgumentNullException(nameof(folder));
+            }
+
+            var file = Directory.GetFiles(folder, "*.csproj", SearchOption.TopDirectoryOnly).FirstOrDefault();
+
+            if (file != null)
+            {
+                var containsEmptySpaces = Regex.IsMatch(file, @"\s+");
+
+                errorMsg = "The \'.csproj\' file\'s name can NOT have white spaces.";
+                return containsEmptySpaces;
+            }
+
+            errorMsg = "There isn't any \'.csproj\' in the specified folder";
+            return false;
         }
 
         /// <summary>

@@ -31,7 +31,7 @@ namespace Microsoft.Bot.PublishValidation
 
                 if (!BotValidatorHelper.BotFileIsValid(ProjectPath, configurationOptions, out errorMsg))
                 {
-                    Log.LogMessage(MessageImportance.High, string.Format("Process found this error ===> {0}", errorMsg));
+                    Log.LogMessage(MessageImportance.High, string.Format("Process found these errors ===> {0}", errorMsg));
                 }
             }
             catch (Exception ex)
