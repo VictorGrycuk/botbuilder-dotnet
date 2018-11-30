@@ -17,6 +17,24 @@
     <!-- forces SDK to copy dependencies into build output to make packing easier -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Microsoft.Bot.Configuration\BotConfiguration.cs" Link="BotHelper\BotConfiguration.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\EncryptUtilities.cs" Link="BotHelper\EncryptUtilities.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\AppInsightsService.cs" Link="BotHelper\Services\AppInsightsService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\AzureService.cs" Link="BotHelper\Services\AzureService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\BlobStorageService.cs" Link="BotHelper\Services\BlobStorageService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\BotService.cs" Link="BotHelper\Services\BotService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\ConnectedService.cs" Link="BotHelper\Services\ConnectedService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\CosmosDbService.cs" Link="BotHelper\Services\CosmosDbService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\DispatchService.cs" Link="BotHelper\Services\DispatchService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\EndpointService.cs" Link="BotHelper\Services\EndpointService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\FileService.cs" Link="BotHelper\Services\FileService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\GenericService.cs" Link="BotHelper\Services\GenericService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\LuisService.cs" Link="BotHelper\Services\LuisService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\Services\QnAMakerService.cs" Link="BotHelper\Services\QnAMakerService.cs" />
+    <Compile Include="..\Microsoft.Bot.Configuration\ServiceTypes.cs" Link="BotHelper\ServiceTypes.cs" />
+  </ItemGroup>
   
   <ItemGroup>
     <!-- pack the props and targets files -->
@@ -34,6 +52,10 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BotHelper\Services\" />
   </ItemGroup>
   
 </Project>

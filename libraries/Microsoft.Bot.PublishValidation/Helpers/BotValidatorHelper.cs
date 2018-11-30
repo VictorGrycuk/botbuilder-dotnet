@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Microsoft.Bot.Configuration;
 using Microsoft.Bot.PublishValidation;
-using Microsoft.Bot.PublishValidation.BotHelper;
 
 namespace TaskBuilder.Helpers
 {
@@ -91,7 +90,7 @@ namespace TaskBuilder.Helpers
                 {
                     if (!BotValidatorHelper.ValidateLuisKey(botConfiguration))
                     {
-                        errorMsg = "Validation fails at ValidateLuisKey.";
+                        errorMsg = "The .bot file does not have a Luis Key";
                         return false;
                     }
                 }
@@ -101,7 +100,7 @@ namespace TaskBuilder.Helpers
                 {
                     if (!BotValidatorHelper.ValidateQnAKey(botConfiguration))
                     {
-                        errorMsg = "Validation fails at ValidateQnAKey.";
+                        errorMsg = "The .bot file does not have a QnA Key";
                         return false;
                     }
                 }

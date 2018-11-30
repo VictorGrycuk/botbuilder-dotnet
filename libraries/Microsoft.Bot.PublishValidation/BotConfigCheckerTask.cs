@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Bot.PublishValidation.BotHelper;
 using Microsoft.Build.Framework;
 using TaskBuilder.Helpers;
 
@@ -18,7 +17,6 @@ namespace Microsoft.Bot.PublishValidation
 
         public override bool Execute()
         {
-            LoggerHelper logHelper = new LoggerHelper(Log.LogError, Log.LogWarning);
             ConfigurationOptions configurationOptions =
                 new ConfigurationOptions(ForbidSpacesInProjectName, RequireBotFile, RequireEndpoints,
                 ForbidEndpoints, RequireLuisKey, RequireQnAMakerKey);
@@ -26,17 +24,15 @@ namespace Microsoft.Bot.PublishValidation
             string errorMsg = string.Empty;
             try
             {
-                Log.LogMessage(MessageImportance.High, string.Format("Project Path ===> {0}", ProjectPath));
-                Log.LogMessage(MessageImportance.High, "Starting to read Bot's file...");
 
                 if (!BotValidatorHelper.BotFileIsValid(ProjectPath, configurationOptions, out errorMsg))
                 {
-                    Log.LogMessage(MessageImportance.High, string.Format("Process found these errors ===> {0}", errorMsg));
+                    Log.LogMessage(MessageImportance.High, $"Process found these errors ===> {errorMsg}");
+                    return false;
                 }
             }
             catch (Exception ex)
             {
-                Log.LogWarning("Error handled");
                 Log.LogErrorFromException(ex);
                 return false;
             }

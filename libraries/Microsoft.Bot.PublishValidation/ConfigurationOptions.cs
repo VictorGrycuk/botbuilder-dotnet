@@ -17,23 +17,23 @@ namespace Microsoft.Bot.PublishValidation
             string RequireEndpoints, string ForbidEndpoints,
             string RequireLuisKey, string RequireQnAMakerKey)
         {
-            this.ForbidSpacesInProjectName = ParseConfigOption(ForbidSpacesInProjectName);
-            this.RequireBotFile = ParseConfigOption(RequireBotFile);
-            this.RequireLuisKey = ParseConfigOption(RequireLuisKey);
-            this.RequireQnAMakerKey = ParseConfigOption(RequireQnAMakerKey);
+            this.ForbidSpacesInProjectName = ParseConfigOption(ForbidSpacesInProjectName, true);
+            this.RequireBotFile = ParseConfigOption(RequireBotFile, true);
+            this.RequireLuisKey = ParseConfigOption(RequireLuisKey, true);
+            this.RequireQnAMakerKey = ParseConfigOption(RequireQnAMakerKey, true);
 
             this.ForbidEndpoints = ForbidEndpoints;
             this.RequireEndpoints = RequireEndpoints;
         }
 
-        private bool ParseConfigOption(string configOption)
+        private bool ParseConfigOption(string configOption, bool defaultOption)
         {
             bool result = false;
 
             if (bool.TryParse(configOption, out result))
                 return result;
 
-            return false;
+            return defaultOption;
         }
     }
 }
