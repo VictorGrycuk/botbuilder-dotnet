@@ -1,7 +1,7 @@
-﻿using System.IO;
-
-namespace TaskBuilder.Helpers
+﻿namespace TaskBuilder.Helpers
 {
+    using System.IO;
+
     public class DirectoryValidatorHelper
     {
         public static bool DirectoryIsValid(string directoryPath, out string resultMsg, out int logtype)
@@ -28,7 +28,7 @@ namespace TaskBuilder.Helpers
 
         public static bool FileExists(string basePath, string fileName, out string resultMsg, out int logtype)
         {
-            string fullPath = Path.Combine(basePath, fileName);
+            var fullPath = Path.Combine(basePath, fileName);
 
             if (Directory.GetFiles(basePath, fileName).Length <= 0)
             {

@@ -1,21 +1,20 @@
-﻿using Microsoft.Build.Framework;
-using TaskBuilder.Helpers;
-
-namespace Microsoft.Bot.PublishValidation
+﻿namespace Microsoft.Bot.PublishValidation
 {
-    public class BotConfigCheckerTask : Microsoft.Build.Utilities.Task
+    using Microsoft.Bot.Configuration;
+    using TaskBuilder.Helpers;
+
+    public class BotConfigCheckerTask : Build.Utilities.Task, Build.Framework.ITask
     {
         public string ProjectPath { get; set; }
 
         public override bool Execute()
         {
-            LoggerHelper logHelper = new LoggerHelper(Log.LogError, Log.LogWarning);
+            var logHelper = new LoggerHelper(Log.LogError, Log.LogWarning);
 
-            string resultMsg = string.Empty;
-            int logType = 0;
+            var bot = BotConfiguration.LoadFromFolder(ProjectPath);
 
             // Validate if the Project directory path is valid
-            if (!DirectoryValidatorHelper.DirectoryIsValid(ProjectPath, out resultMsg, out logType))
+            if (!DirectoryValidatorHelper.DirectoryIsValid(ProjectPath, out var resultMsg, out var logType))
             {
                 logHelper.Log(resultMsg, logType);
                 return false;
