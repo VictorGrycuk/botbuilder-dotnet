@@ -27,6 +27,16 @@ namespace TaskBuilder.Helpers
         {
             try
             {
+                errorMsg = string.Empty;
+
+                if (configurationOptions.ForbidSpacesInProjectName)
+                {
+                    if (!BotValidatorHelper.ProjectNameIsValid(folder, out errorMsg))
+                    {
+                        return false;
+                    }
+                }
+
                 if (!configurationOptions.RequireBotFile)
                 {
                     errorMsg = string.Empty;
@@ -56,14 +66,6 @@ namespace TaskBuilder.Helpers
             try
             {
                 errorMsg = string.Empty;
-
-                if (options.ForbidSpacesInProjectName)
-                {
-                    if (!BotValidatorHelper.ProjectNameIsValid(folder, out errorMsg))
-                    {
-                        return false;
-                    }
-                }
 
                 // Check if the .bot file contains the specified endpoints
                 if (!string.IsNullOrWhiteSpace(options.RequireEndpoints))
