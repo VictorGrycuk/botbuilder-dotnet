@@ -34,7 +34,6 @@
   
   <ItemGroup>
     <!-- pack the props and targets files -->
-    <Content Include="build\Microsoft.Bot.PublishValidation.props" PackagePath="build\" />
     <Content Include="build\Microsoft.Bot.PublishValidation.targets" PackagePath="build\" />
   </ItemGroup>
 

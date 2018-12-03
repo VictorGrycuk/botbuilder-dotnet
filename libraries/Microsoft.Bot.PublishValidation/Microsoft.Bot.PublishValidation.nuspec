@@ -4,8 +4,8 @@
     <id>$id$</id>
     <version>$version$</version>
     <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <authors>$authors$</authors>
+    <owners>$authors$</owners>
     <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
     <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
     <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
@@ -25,6 +25,6 @@
     <file src="readme.txt" target="" />
     <!-- Include everything in \build -->
     <file src="build\**" target="build" />
-    <file src="bin\Release\**" target="lib" />
+    <file src="publish\**" target="lib\netcoreapp2.1" />
   </files>
 </package>
