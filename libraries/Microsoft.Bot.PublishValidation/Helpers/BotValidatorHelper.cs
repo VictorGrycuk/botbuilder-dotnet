@@ -17,6 +17,9 @@ namespace TaskBuilder.Helpers
 
     public class BotValidatorHelper
     {
+        private const string forbiddenEndpoints = "Forbidden Endpoints";
+        private const string requiredEndpoints = "Required Endpoints";
+
         /// <summary>
         /// Checks if a bot file is valid or not according to some configuration options
         /// </summary>
@@ -29,6 +32,8 @@ namespace TaskBuilder.Helpers
             {
                 errorMsg = string.Empty;
 
+                // Checks if the project name which uses the .bot file contains white spaces on its name.
+                // If it has at least one white space, the process will fail and return an error.
                 if (configurationOptions.ForbidSpacesInProjectName)
                 {
                     if (!BotValidatorHelper.ProjectNameIsValid(folder, out errorMsg))
@@ -67,22 +72,28 @@ namespace TaskBuilder.Helpers
             {
                 errorMsg = string.Empty;
 
+                string missingEndpoints = string.Empty;
+
                 // Check if the .bot file contains the specified endpoints
-                if (!string.IsNullOrWhiteSpace(options.RequireEndpoints))
+                if (!string.IsNullOrWhiteSpace(options.RequiredEndpoints))
                 {
-                    if (!BotValidatorHelper.ValidateEndpoints(botConfiguration, options.RequireEndpoints, true))
+                    if (!BotValidatorHelper.ValidateEndpoints(botConfiguration, options.RequiredEndpoints, true, out missingEndpoints))
                     {
-                        errorMsg = "Validation fails at ValidateEndpoints => required.";
+                        errorMsg = string.IsNullOrWhiteSpace(missingEndpoints) ?
+                            $"There isnt't any { requiredEndpoints } in the .bot file." :
+                            $"The .bot file does not have the next { requiredEndpoints }: { missingEndpoints }";
                         return false;
                     }
                 }
 
                 // Check if the .bot file does not contain the forbidded endpoints
-                if (!string.IsNullOrWhiteSpace(options.ForbidEndpoints))
+                if (!string.IsNullOrWhiteSpace(options.ForbiddenEndpoints))
                 {
-                    if (!BotValidatorHelper.ValidateEndpoints(botConfiguration, options.RequireEndpoints, false))
+                    if (!BotValidatorHelper.ValidateEndpoints(botConfiguration, options.RequiredEndpoints, false, out missingEndpoints))
                     {
-                        errorMsg = "Validation fails at ValidateEndpoints => excluded.";
+                        errorMsg = string.IsNullOrWhiteSpace(missingEndpoints) ? 
+                            $"There isnt't any { forbiddenEndpoints } in the .bot file.":
+                            $"The .bot file does not have the next { forbiddenEndpoints }: { missingEndpoints }";
                         return false;
                     }
                 }
@@ -92,7 +103,7 @@ namespace TaskBuilder.Helpers
                 {
                     if (!BotValidatorHelper.ValidateLuisKey(botConfiguration))
                     {
-                        errorMsg = "The .bot file does not have a Luis Key";
+                        errorMsg = "The .bot file does not have a Luis Key.";
                         return false;
                     }
                 }
@@ -102,7 +113,7 @@ namespace TaskBuilder.Helpers
                 {
                     if (!BotValidatorHelper.ValidateQnAKey(botConfiguration))
                     {
-                        errorMsg = "The .bot file does not have a QnA Key";
+                        errorMsg = "The .bot file does not have a QnA Key.";
                         return false;
                     }
                 }
@@ -121,10 +132,12 @@ namespace TaskBuilder.Helpers
         /// <param name="botConfiguration"></param>
         /// <param name="specifiedEndpoints"></param>
         /// <param name="required"></param>
+        /// <missingEndpoints name="missingEndpoints">List of the missing endpoints in the bot file. If its null/empty and the methods returns FALSE, it means that there isn't ANY endpoint in the file.</missingEndpoints>
         /// <returns></returns>
-        private static bool ValidateEndpoints(BotConfiguration botConfiguration, string specifiedEndpoints, bool required)
+        private static bool ValidateEndpoints(BotConfiguration botConfiguration, string specifiedEndpoints, bool required, out string missingEndpoints)
         {
             List<string> endpoints = specifiedEndpoints.Trim().Split(',').ToList();
+            List<string> missingEndpointsList = new List<string>();
 
             // Get all the endpoint types in the service list
             IEnumerable<ConnectedService> botEndpoints =
@@ -132,17 +145,28 @@ namespace TaskBuilder.Helpers
 
             // If there isn't any endpoint, returns false
             if (botEndpoints == null)
+            {
+                missingEndpoints = string.Empty;
                 return false;
+            }
 
             // Checks that all the specified endpoints are/aren't in the bot file
             foreach (var endpoint in endpoints)
             {
                 if (botEndpoints.Any(ep => ((EndpointService)ep).Name == endpoint) != required)
                 {
-                    return false;
+                    missingEndpointsList.Add(endpoint);
                 }
             }
 
+            // If there is at least one missing endpoint, the method will return an error message listing all of them
+            if (missingEndpointsList.Count() != 0)
+            {
+                missingEndpoints = string.Join("\n\t*", missingEndpointsList);
+                return false;
+            }
+
+            missingEndpoints = string.Empty;
             return true;
         }
 
@@ -227,8 +251,11 @@ namespace TaskBuilder.Helpers
             {
                 var containsEmptySpaces = Regex.IsMatch(file, @"\s+");
 
-                errorMsg = "The \'.csproj\' file\'s name can NOT have white spaces.";
-                return containsEmptySpaces;
+                errorMsg = !containsEmptySpaces ?
+                    string.Empty :
+                    "The \'.csproj\' file\'s name can NOT have white spaces.";
+
+                return !containsEmptySpaces;
             }
 
             errorMsg = "There isn't any \'.csproj\' in the specified folder";
