@@ -14,6 +14,12 @@
             Console.WriteLine("Args: " + string.Join(", ", args));
 
             var projectPath = args[0];
+            var requireEndpoints = args[1];
+            var forbidEndpoints = args[2];
+            var forbidSpacesInProjectName = args[3];
+            var requireBotFile = args[4];
+            var requireLuisKey = args[5];
+            var requireQnAMakerKey = args[6];
 
             try
             {
