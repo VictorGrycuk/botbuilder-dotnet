@@ -1,16 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>microsoft,BotFramework,nugetbotbuilder</Authors>
-    <Company>Microsoft</Company>
-    <Product>Microsoft Bot Builder SDK</Product>
+    <PackAsTool>true</PackAsTool>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <ToolCommandName>bot-validate</ToolCommandName>
+    <PackageId>Microsoft.Bot.PublishValidation</PackageId>
     <Description>Task for validating the configuration of bot projects before publishing</Description>
+    <Summary>Summary</Summary>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Company>Microsoft</Company>
+    <Authors>microsoft,BotFramework,nugetbotbuilder</Authors>
+    <Product>Microsoft Bot Builder SDK</Product>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-    <PackageLicenseUrl>https://github.com/Microsoft/BotBuilder/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Microsoft/botbuilder-dotnet</PackageProjectUrl>
     <PackageIconUrl>http://docs.botframework.com/images/bot_icon.png</PackageIconUrl>
+    <PackageLicenseUrl>https://github.com/Microsoft/BotBuilder/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/Microsoft/botbuilder-dotnet</RepositoryUrl>
+    <LicenseUrl>https://github.com/Microsoft/BotBuilder-dotnet/blob/master/LICENSE</LicenseUrl>
+    <RepositoryType />
+    <PackageTags>bots;ai;botframework;botbuilder</PackageTags>
+    <NeutralLanguage />
+    <AssemblyName>Microsoft.Bot.PublishValidation</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -27,7 +41,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.9.20" />
-    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Bot.Configuration" Version="4.1.5" />
   </ItemGroup>
 
   <ItemGroup>

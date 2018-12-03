@@ -1,6 +1,6 @@
 ﻿<Project>
   <!-- -->
-  <Target Name="BotConfigurationValidation" AfterTargets="CoreBuild">
+  <Target Name="BotConfigurationValidation" AfterTargets="CoreBuild" Condition="$(AvoidDefaultPublishValidation) != 'true'">
     <BotConfigCheckerTask ProjectPath="$(MSBuildProjectDirectory)" />
   </Target>
 </Project>

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TaskBuilder.Helpers
+﻿namespace TaskBuilder.Helpers
 {
+    using System;
+
     public enum LogType
     {
         None = 0,
@@ -27,10 +25,10 @@ namespace TaskBuilder.Helpers
             switch(logType)
             {
                 case (int)LogType.Error:
-                    this.logError(msgToLog, null);
+                    logError(msgToLog, null);
                     break;
                 case (int)LogType.Warning:
-                    this.logWarning(msgToLog, null);
+                    logWarning(msgToLog, null);
                     break;
                 default:
                     break;
