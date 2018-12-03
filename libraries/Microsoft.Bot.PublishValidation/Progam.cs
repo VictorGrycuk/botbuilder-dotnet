@@ -11,7 +11,6 @@
 
         public static int Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
             Console.WriteLine("Args: " + string.Join(", ", args));
 
             var projectPath = args[0];

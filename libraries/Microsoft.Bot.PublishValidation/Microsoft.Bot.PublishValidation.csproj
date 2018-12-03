@@ -26,11 +26,6 @@
     <AssemblyName>Microsoft.Bot.PublishValidation</AssemblyName>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- forces SDK to copy dependencies into build output to make packing easier -->
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
-  
   <ItemGroup>
     <!-- pack the props and targets files -->
     <Content Include="build\Microsoft.Bot.PublishValidation.targets" PackagePath="build\" />
