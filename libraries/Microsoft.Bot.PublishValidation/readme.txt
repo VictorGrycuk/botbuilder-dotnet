@@ -11,27 +11,15 @@ You can also set to check the following:
 - Existence of LUIS key
 - Existence of QnA Maker key
 
-In order to add this extra validations, you can create your own Target in your '.csproj' file by adding the following code:
-
-------------------------------------------------------------------------------
-<Target Name="ValidateBotForPublish" BeforeTargets="OnlyPublish">
-    <BotConfigCheckerTask
-        ProjectPath="$(MSBuildProjectDirectory)"
-        ForbidSpacesInProjectName="true"
-        RequireBotFile="true"
-        RequireEndpoints="production"
-        ForbidEndpoints="development"
-        RequireLuisKey="true"
-        RequireQnAMakerKey="true"/>
-</Target>
-------------------------------------------------------------------------------
-
-IMPORTANT! This target won't prevent the default validation to run. For achieving that you should also add the following property:
+In order to change the behavior of this validations, you can create your own properties in your '.csproj' file by adding the following code:
 
 ------------------------------------------------------------------------------
 <PropertyGroup>
-    <AvoidDefaultPublishValidation>true</AvoidDefaultPublishValidation>
+    <RequireEndpoints>Production</RequireEndpoints>
+    <ForbidEndpoints>Development</ForbidEndpoints>
+    <ForbidSpacesInProjectName>True</ForbidSpacesInProjectName>
+    <RequireBotFile>True</RequireBotFile>
+    <RequireLuisKey>True</RequireLuisKey>
+    <RequireQnAMakerKey>True</RequireQnAMakerKey>
 </PropertyGroup>
 ------------------------------------------------------------------------------
-
-The default Target inside this Task has a condition, which checks the existence of this tag 'AvoidDefaultPublishValidation', and if it's set to true, the default validation explained before won't run.
